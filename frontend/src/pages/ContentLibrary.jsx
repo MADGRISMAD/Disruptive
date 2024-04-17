@@ -27,8 +27,8 @@ export const ContentLibrary = () => {
   ];
 
   return (
-    <div className="bg-gray-900 text-white">
-        <Navbar theme="dark" /> {/* Pasamos el tema oscuro a la barra de navegación */}
+    <div>
+        <Navbar />
       <div className="container mx-auto mt-8">
         <h1 className="text-3xl font-semibold mb-4">Biblioteca de Contenido</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
