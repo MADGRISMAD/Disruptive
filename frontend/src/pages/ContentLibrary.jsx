@@ -77,13 +77,13 @@ export const ContentLibrary = () => {
       imageUrl: "https://img.freepik.com/foto-gratis/colores-arremolinados-interactuan-danza-fluida-sobre-lienzo-que-muestra-tonos-vibrantes-patrones-dinamicos-que-capturan-caos-belleza-arte-abstracto_157027-2892.jpg?size=626&ext=jpg&ga=GA1.1.1687694167.1713312000&semt=sph",
     },
   ];
-  
 
   const [contentList, setContentList] = useState(initialContentList);
   const [originalContentList] = useState(initialContentList);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedType, setSelectedType] = useState("Todos");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
+  const [searchQuery, setSearchQuery] = useState(""); // Se agregó la definición de searchQuery
 
   const filterByTypeAndCategory = () => {
     if (selectedType === "Todos" && selectedCategory === "Todas") {
@@ -100,6 +100,17 @@ export const ContentLibrary = () => {
     }
   };
 
+  const filterBySearchQuery = () => {
+    if (!searchQuery.trim()) {
+      setContentList(originalContentList);
+    } else {
+      const filteredContent = originalContentList.filter((content) =>
+        content.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setContentList(filteredContent);
+    }
+  };
+
   const resetContent = () => {
     setContentList(originalContentList);
     setSelectedType("Todos");
@@ -112,9 +123,29 @@ export const ContentLibrary = () => {
       <div className="container mx-auto mt-8">
         <h1 className="text-3xl font-semibold mb-4">Biblioteca de Contenido</h1>
         <div className="flex justify-between mb-4">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setIsModalOpen(true)}>Filtrar</button>
-          <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={resetContent}>Restablecer</button>
+          <div>
+            {/* Barra de búsqueda */}
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar juegos..."
+              className="p-2 rounded-lg bg-gray-600 text-white border border-gray-500"
+            />
+            <button
+              className="ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg"
+              onClick={filterBySearchQuery}
+            >
+              Buscar
+            </button>
+          </div>
+          <div>
+            {/* Botones de filtros */}
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" onClick={() => setIsModalOpen(true)}>Filtrar</button>
+            <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg" onClick={resetContent}>Restablecer</button>
+          </div>
         </div>
+        {/* Contenido de la biblioteca */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {contentList.map((content) => (
             <ContentCard
@@ -127,6 +158,7 @@ export const ContentLibrary = () => {
             />
           ))}
         </div>
+        {/* Modal de filtros */}
         {isModalOpen && (
           <div className="fixed z-10 inset-0 overflow-y-auto">
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ContentCard = ({ title, type, category, author, imageUrl }) => {
-  // Función para obtener el color del badge según el tipo de contenido
+  // Función para obtener el color del badge según la categoría
   const getCategoryColor = (category) => {
     switch (category) {
       case 'Deportes':
@@ -32,16 +32,23 @@ const ContentCard = ({ title, type, category, author, imageUrl }) => {
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-4">
       <h3 className="text-lg font-semibold mb-2 text-white">{title}</h3>
-      {/* Badge para la categoría */}
+      <div className="relative">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-auto rounded-lg mt-4 filter blur-md"
+        />
+        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+          <p className="text-sm">Regístrate para ver este contenido</p>
+        </div>
+      </div>
       <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${getCategoryColor(category)} mr-2 mb-2`}>
         {category}
       </span>
-      {/* Badge para el tipo de contenido */}
       <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${getTypeColor(type)} mb-2`}>
         {type}
       </span>
       <p className="text-gray-400">Autor: {author}</p>
-      <img src={imageUrl} alt={title} className="w-full h-auto rounded-lg mt-4" />
     </div>
   );
 }

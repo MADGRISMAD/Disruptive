@@ -8,7 +8,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
 
     <BrowserRouter>
+    <div className="bg-gray-900 text-white min-h-screen">
       <App />
+      </div>
     </BrowserRouter>
     
   </React.StrictMode>,
