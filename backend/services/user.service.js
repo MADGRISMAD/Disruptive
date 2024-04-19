@@ -15,10 +15,14 @@ async function getUserByUsername(username) {
 async function getAllUsers() {
     return await database.getAllUsers();
 }
+async function LoginUser(data){
+    return await database.LoginUser(data);
+}
 
 module.exports = {
     createUser,
     getUserByEmail,
     getUserByUsername,
-    getAllUsers
+    getAllUsers,
+    LoginUser
 };

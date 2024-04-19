@@ -1,6 +1,7 @@
+require('dotenv').config();
 const { MongoClient } = require("mongodb");
-const url = "mongodb://127.0.0.1:27017";
-const dbName = "disruptive";
+const url = process.env.DATABASE_URL;
+const dbName = process.env.DATABASE_NAME;
 
 const client = new MongoClient(url);
 
@@ -32,10 +33,16 @@ async function getAllUsers() {
     const users = await db.collection("users").find().toArray();
     return users;
 }
+async function LoginUser(data){
+    const db = await connectToDatabase();
+    const user = await db.collection("users").findOne({data});
+    return user;
+}
 
 module.exports = {
     createUser,
     getUserByEmail,
     getUserByUsername,
-    getAllUsers
+    getAllUsers,
+    LoginUser
 };

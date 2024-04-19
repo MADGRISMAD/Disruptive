@@ -1,3 +1,5 @@
+const bcrypt = require('../util/bscrypt.util');
+const JWTCreator = require('../util/jwt.utils');
 const userSchema = require('../models/user.model');
 const userService = require('../services/user.service');
 
@@ -14,6 +16,7 @@ const createUser = async (req, res) => {
         if (await userService.getUserByUsername(value.username)) {
             return res.status(400).send('Username already exists');
         }
+        value.password = await bcrypt.hashPassword(value.password);
         const user = await userService.createUser(value);
         return res.status(201).send(user);
     } catch (error) {
@@ -67,11 +70,47 @@ const deleteUser = async (req, res) => {
         return res.status(500).send('Error deleting user: ' + error);
     }
 };
-
+const LoginUser = async (req,res,next)=>{
+    try{
+        let login = null;
+        let password = req.body.password;
+        if(!req.body.email){
+            login = req.body.username;
+        }
+        else{
+            login = req.body.email;
+        }
+        const result = await userService.LoginUser(login);
+        if(result){
+            const isMatch = await bcrypt.checkPassword(password, result.password);
+            if(isMatch){
+                console.log("blob");
+                /*
+                const token = await JWTCreator.generateToken({
+                    userId: result._id,
+                    email: result.email,
+                    username: result.username
+                });
+                res.cookie('token',token ,{
+                    maxAge: 24 * 60 * 60 * 1000,
+                    httpOnly: true
+                })
+                */
+                req.role = result.type;
+                next()
+                return;
+            }
+        }
+    }
+    catch(err){
+        return res.status(500).send('Internal server error: ' + err.message);
+    }
+};
 module.exports = {
     createUser,
     getAllUsers,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    LoginUser
 };
