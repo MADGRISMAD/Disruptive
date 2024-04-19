@@ -1,15 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/user.controller');
-const multer =require('multer');
-const upload=multer();
+const multer = require('multer');
+const upload = multer();
 
-//get
+// POST - Crear usuario
+router.post('/create', upload.none(), userController.createUser);
 
-//post
-router.post('/create',upload.none(), userController.createUser);
-//delete
+// GET - Obtener todos los usuarios
+router.get('/', userController.getAllUsers);
 
-//put
+// GET - Obtener un usuario por ID
+router.get('/:id', userController.getUserById);
+
+// PUT - Actualizar usuario
+router.put('/:id', upload.none(), userController.updateUser);
+
+// DELETE - Eliminar usuario
+router.delete('/:id', userController.deleteUser);
 
 module.exports = router;

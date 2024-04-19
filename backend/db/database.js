@@ -1,31 +1,41 @@
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const url = "mongodb://127.0.0.1:27017";
 const dbName = "disruptive";
 
 const client = new MongoClient(url);
 
-const connectToDatabase = client.db(dbName, { useUnifiedTopology: true });
+async function connectToDatabase() {
+    await client.connect();
+    return client.db(dbName);
+}
 
 async function createUser(data) {
-  const result = await connectToDatabase.collection("users").insertOne(data);
-  return result;
+    const db = await connectToDatabase();
+    const result = await db.collection("users").insertOne(data);
+    return result;
 }
 
 async function getUserByEmail(email) {
-  const result = await connectToDatabase
-    .collection("users")
-    .findOne({ email});
-  return result;
+    const db = await connectToDatabase();
+    const result = await db.collection("users").findOne({ email });
+    return result;
 }
+
 async function getUserByUsername(username) {
-  const result = await connectToDatabase
-    .collection("users")
-    .findOne({ username});
-  return result;
+    const db = await connectToDatabase();
+    const result = await db.collection("users").findOne({ username });
+    return result;
+}
+
+async function getAllUsers() {
+    const db = await connectToDatabase();
+    const users = await db.collection("users").find().toArray();
+    return users;
 }
 
 module.exports = {
-  createUser,
-  getUserByEmail,
-  getUserByUsername,
+    createUser,
+    getUserByEmail,
+    getUserByUsername,
+    getAllUsers
 };
